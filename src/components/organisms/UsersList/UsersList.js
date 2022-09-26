@@ -1,52 +1,29 @@
-import React, {useState, useEffect} from 'react';
-import { users as usersData } from 'data/users';
-import UsersListItem from 'components/molecules/UsersListItem/UsersListItem'
-import { Wrapper, StyledList }from './UsersList.styles.js'
-
-const mockAPI = (success) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (usersData) {
-        resolve([...usersData]);
-      } else {
-        reject({ message: 'Error' });
-      }
-    }, 2000);
-  });
-};
+import React, {useContext} from 'react';
+import PropTypes from 'prop-types';
+import UsersListItem from 'components/molecules/UsersListItem/UsersListItem';
+import { StyledList } from './UsersList.styles';
+import { UserShape } from 'types';
+import { Title } from 'components/atoms/Title/Title';
+import { UsersContext } from 'providers/UsersProvider';
 
 const UsersList = () => {
-    const [ users, setUsers ] = useState([]);
-    const [ isLoading, setLoadingState ] = useState([]);
+  const { users } = useContext(UsersContext);
 
-
-    useEffect(() => {
-        setLoadingState(true);
-        mockAPI()
-            .then((data) => {
-                setLoadingState(false);
-                setUsers(data);
-            })
-            .catch((err) => {
-                console.log(err);
-            })
-    }, []);
-
-
-    const deleteUser = (name) => {
-        const filteredUsers = users.filter(user => user.name !== name );
-        setUsers(filteredUsers);
-    }
-
-    return (
-        <Wrapper>
-            <h1>{isLoading ? 'Loading...' : 'Users List'}</h1>
-            <StyledList>
-                {users.map((userData) => (
-                    <UsersListItem deleteUser={deleteUser} userData={userData} key = {userData.name} />
-                ))}
-            </StyledList>
-        </Wrapper>
-    );
+  return (
+    <>
+      <Title>Students list</Title>
+      <StyledList>
+        {users.map((userData) => (
+          <UsersListItem key={userData.name} userData={userData} />
+        ))}
+      </StyledList>
+    </>
+  );
 };
-export default UsersList
+
+UsersList.propTypes = {
+  users: PropTypes.arrayOf(PropTypes.shape(UserShape)),
+  deleteUser: PropTypes.func,
+};
+
+export default UsersList;
