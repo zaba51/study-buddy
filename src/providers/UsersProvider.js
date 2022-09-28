@@ -33,4 +33,4 @@ const UsersProvider = ({ children }) => {
     )
 }
 
-export default UsersProvider
+export default UsersProvider;
