@@ -11,9 +11,11 @@ export const Wrapper = styled.div`
     align-items: flex-start;
     padding: 50px;
     overflow-y: scroll;
+    position:relative;
 `;
 
 export const NewsSectionHeader = styled.h2`
+  position:relative;
   margin-right: auto;
   color: ${({ theme }) => theme.colors.darkGrey};
 `;
