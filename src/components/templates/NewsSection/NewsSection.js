@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import { ArticleWrapper, ContentWrapper, NewsSectionHeader, TitleWrapper, Wrapper } from './NewsSection.styles'
 import { Button } from 'components/atoms/Button/Button';
 import axios from 'axios';
+import { LoadCircle } from 'components/atoms/LoadCircle/LoadCircle';
 
 export const query = `
          {
@@ -59,9 +60,12 @@ const NewsSection = () => {
               <Button isBig>Read more</Button>
             </ArticleWrapper>
           ))
-        ) : (
-          <NewsSectionHeader>{error ? error : 'Loading...'}</NewsSectionHeader>
-        )}
+        ) : error ?        
+        (
+          <NewsSectionHeader>{error}</NewsSectionHeader>
+        ) : <LoadCircle />
+        
+        }
       </Wrapper>
     );
   };

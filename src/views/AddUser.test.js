@@ -2,7 +2,7 @@ import React from 'react';
 import AddUser from './AddUser';
 import Dashboard from './Dashboard';
 import { screen, fireEvent } from '@testing-library/react';
-import { renderWithProviders } from 'helpers/renderWithThemeProvider';
+import { renderWithProviders } from 'helpers/renderWithProviders';
 
 describe('Form Field', () => {
   it('Adds new user to the list', () => {

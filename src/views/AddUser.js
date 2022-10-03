@@ -22,6 +22,7 @@ const AddUser = () => {
     handleThrowError,
     handleToggleConsent
     } = useForm(initialFormState);
+
   const { handleAddUser }= useContext(UsersContext);
 
   const handleSubmitUser = (e) => {
