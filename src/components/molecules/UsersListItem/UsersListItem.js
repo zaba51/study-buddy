@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import DeleteButton from 'components/atoms/DeleteButton/DeleteButton';
 import { Wrapper, StyledAverage, StyledInfo } from './UsersListItem.styles.js'
 import { UserShape } from 'types/index.js';
-import { UsersContext } from 'providers/UsersProvider.js';
+//import { UsersContext } from 'providers/UsersProvider.js';
 
 const UsersListItem = ({ userData: { average, name, attendance = '0%'} }) => {
-    const { deleteUser } = useContext(UsersContext);
+    //const { deleteUser } = useContext(UsersContext);
 
     return (
         <Wrapper>
@@ -14,7 +14,7 @@ const UsersListItem = ({ userData: { average, name, attendance = '0%'} }) => {
             <StyledInfo>
                 <p>
                     {name}
-                    <DeleteButton onClick = {() => deleteUser(name)} />
+                    <DeleteButton />
                 </p>
                 <p>attendence: {attendance}</p>
             </StyledInfo>

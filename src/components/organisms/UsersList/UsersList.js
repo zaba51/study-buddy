@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useState, useEffect} from 'react';
 import UsersListItem from 'components/molecules/UsersListItem/UsersListItem';
 import { StyledList } from './UsersList.styles';
 import { Title } from 'components/atoms/Title/Title';
@@ -7,9 +7,17 @@ import { useStudents } from 'hooks/useStudents';
 
 
 const UsersList = () => {
+  const [ students, setStudents] = useState([]);
   const { id } = useParams();
-  const { students } = useStudents({ groupId: id });
+  const { getStudents } = useStudents();
   
+  useEffect(() => {
+    (async () => {
+      const students = await getStudents(id);
+      setStudents(students);
+    })()
+  }, [getStudents, id])
+
   return (
     <>
       <Title>Students list</Title>
