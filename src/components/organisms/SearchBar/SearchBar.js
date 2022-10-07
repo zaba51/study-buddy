@@ -1,24 +1,29 @@
 import { Input } from 'components/atoms/Input/Input';
 import React, { useState, useEffect} from 'react';
-import { SearchBarWrapper, SearchResults, SearchWrapper, StatusInfo } from 'components/organisms/SearchBar/SearchBar.styles';
+import { SearchBarWrapper, SearchResults, SearchWrapper,  SearchResultsItem, StatusInfo } from 'components/organisms/SearchBar/SearchBar.styles';
 import { useStudents } from 'hooks/useStudents';
 import debounce from 'lodash.debounce';
+import { useCombobox } from 'downshift';
 
 const SearchBar = () => {
-  const [searchPhrase, setSearchPhrase] = useState('');
   const [matchingStudents, setMatchingStudents] = useState([]);
   const { findStudents } = useStudents();
 
-  const getMatchingStudents = debounce(async (e) => {
-    const { students } = await findStudents(searchPhrase);
+  const getMatchingStudents = debounce(async ({ inputValue }) => {
+    const { students } = await findStudents(inputValue);
     setMatchingStudents(students);
-  }, 500);
+  }, 400);
 
-  useEffect(() => {
-    if (!searchPhrase) return;
-    getMatchingStudents(searchPhrase);
-  }, [searchPhrase]); 
-  //}, [searchPhrase, getMatchingStudents]);
+  const { isOpen, getMenuProps, getInputProps, getComboboxProps, highlightedIndex, getItemProps } = useCombobox({
+    items: matchingStudents,
+    onInputValueChange: getMatchingStudents,
+  });
+
+  // useEffect(() => {
+  //   if (!searchPhrase) return;
+  //   getMatchingStudents(searchPhrase);
+  // }, [searchPhrase]); 
+  // //}, [searchPhrase, getMatchingStudents]);
 
 
   return (
@@ -29,15 +34,16 @@ const SearchBar = () => {
           <strong>Teacher</strong>
         </p>
       </StatusInfo>
-      <SearchWrapper>
-        <Input onChange={(e) => setSearchPhrase(e.target.value)} value={searchPhrase} name="Search" id="Search" />
-        {searchPhrase && matchingStudents.length ? (
-          <SearchResults>
-            {matchingStudents.map((student) => (
-              <li key={student.id}>{student.name}</li>
+      <SearchWrapper {...getComboboxProps()}>
+        <Input {...getInputProps() } name="Search" id="Search" placeholder="Search" />
+        <SearchResults isVisible={isOpen && matchingStudents.length > 0} {...getMenuProps()} aria-label="results">
+          {isOpen &&
+            matchingStudents.map((item, index) => (
+              <SearchResultsItem isHighlighted={highlightedIndex === index} {...getItemProps({ item, index })} key={item.id}>
+                {item.name}
+              </SearchResultsItem>
             ))}
-          </SearchResults>
-        ) : null}
+        </SearchResults>
       </SearchWrapper>
     </SearchBarWrapper>
   );

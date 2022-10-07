@@ -7,8 +7,16 @@ import { GroupWrapper, TitleWrapper, Wrapper } from 'views/Dashboard.styles';
 import { Title } from 'components/atoms/Title/Title';
 
 const Dashboard = () => {
-  const { groups } = useStudents();
+  const [ groups, setGroups ] = useState([]);
+  const { getGroups } = useStudents();
   const { id } = useParams();
+
+  useEffect(() => {
+    (async () => {
+      const groups = await getGroups();
+      setGroups(groups);
+    })()
+  }, [getGroups])
 
   if (!id && groups.length > 0) return <Navigate replace to={`/group/${groups[0]}`} />;
   

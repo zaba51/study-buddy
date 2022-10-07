@@ -16,6 +16,9 @@ export const SearchBarWrapper = styled.div`
     max-width: 350px;
     border: 2px solid ${({ theme }) => theme.colors.lightPurple};
   }
+  ${Input}::placeholder {
+    font-size: ${({ theme }) => theme.fontSize.l};
+  }
 `;
 
 export const StatusInfo = styled.div`
@@ -34,6 +37,7 @@ position: relative;
 `;
 
 export const SearchResults = styled.ul`
+  visibility: ${({ isVisible }) => (isVisible ? 'visible' : 'hidden')};
   z-index: 1000;
   max-height: 500px;
   overflow-y: scroll;
@@ -47,18 +51,19 @@ export const SearchResults = styled.ul`
   display: flex;
   flex-direction: column;
   background-color: ${({ theme }) => theme.colors.white};
-  li {
-    font-weight: bold;
-    color: ${({ theme }) => theme.colors.darkGrey};
-    background-color: ${({ theme }) => theme.colors.white};
-    width: 100%;
-    padding: 20px 5px;
-  }
-  li:hover,
-  li:focus {
+`;
+
+export const SearchResultsItem = styled.li`
+  font-weight: bold;
+  color: ${({ theme }) => theme.colors.darkGrey};
+  background-color: ${({ theme, isHighlighted }) => (isHighlighted ? theme.colors.lightPurple : theme.colors.white)};
+  width: 100%;
+  padding: 20px 5px;
+  &:hover {
     background-color: ${({ theme }) => theme.colors.lightPurple};
+    cursor:pointer;
   }
-  li:not(:last-child) {
+  &:not(:last-child) {
     border-bottom: 1px solid ${({ theme }) => theme.colors.darkPurple};
   }
 `;

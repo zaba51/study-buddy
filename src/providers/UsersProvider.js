@@ -6,10 +6,13 @@ export const UsersContext = React.createContext({
     handleAddUser: () => {},
     deleteUser: () => {},
 });
-  
+
+console.log("UsersProvider");
+
 const UsersProvider = ({ children }) => {
     const [users, setUsers] = useState([]);
-  
+
+
     useEffect(() => {
       axios
         .get('/students')
