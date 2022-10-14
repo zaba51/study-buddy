@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { ViewWrapper } from 'components/molecules/ViewWrapper/ViewWrapper';
 import { useParams, Link, Navigate } from 'react-router-dom';
-import UsersList from 'components/organisms/UsersList/UsersList';
 import { useStudents } from 'hooks/useStudents';
+import { useModal } from 'hooks/useModal';
 import { GroupWrapper, TitleWrapper, Wrapper } from 'views/Dashboard.styles';
 import { Title } from 'components/atoms/Title/Title';
+import StudentDetails from 'components/molecules/StudentDetails/StudentDetails';
+import Modal from 'components/organisms/Modal/Modal';
+import UsersList from 'components/organisms/UsersList/UsersList';
 
 const Dashboard = () => {
-  const [ groups, setGroups ] = useState([]);
-  const { getGroups } = useStudents();
+  const [groups, setGroups] = useState([]);
+  const [currentStudent, setCurrentStudent] = useState(null);
+  const { getGroups, getStudentById } = useStudents();
   const { id } = useParams();
+  const { isOpen, handleOpenModal, handleCloseModal } = useModal();
 
   useEffect(() => {
     (async () => {
@@ -17,6 +21,12 @@ const Dashboard = () => {
       setGroups(groups);
     })()
   }, [getGroups])
+
+  const handleOpenStudentDetails = async (id) => {
+    const student = await getStudentById(id);
+    setCurrentStudent(student);
+    handleOpenModal();
+  };
 
   if (!id && groups.length > 0) return <Navigate replace to={`/group/${groups[0]}`} />;
   
@@ -33,7 +43,10 @@ const Dashboard = () => {
         </nav>
       </TitleWrapper>
       <GroupWrapper>
-        <UsersList />
+        <UsersList handleOpenStudentDetails={handleOpenStudentDetails}/>
+        <Modal isOpen={isOpen} handleClose={handleCloseModal}>
+          <StudentDetails student={currentStudent} />
+        </Modal>
       </GroupWrapper>
     </Wrapper>
   );
