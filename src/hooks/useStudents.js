@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import axios from 'axios';
 
 export const useStudents = () => {
@@ -12,31 +12,26 @@ export const useStudents = () => {
     }
   } ,[])
 
-  // useEffect(() => {
-  //   axios
-  //     .get('/groups')
-  //     .then(({ data }) => setGroups(data.groups))
-  //     .catch((err) => console.log(err));
-  // }, []);
+  const getStudentById = useCallback(async (studentId) => {
+    try {
+      const result = await axios.get(`/students/${studentId}`);
+      return result.data.students;
+    } catch (e) {
+      console.log(e);
+    }
+  },[]);
 
-  const getStudents = useCallback( async (groupId) => {
+  const getStudentsByGroup = useCallback( async (groupId) => {
       try {
-        const result = await axios.get(`/students/${groupId}`);
+        const result = await axios.get(`/groups/${groupId}`);
         return result.data.students;
       } catch (e) {
         console.log(e);
       }
     }, []);
 
-  // useEffect(() => {
-  //   if (!groupId) return;
-  //   axios
-  //     .get(`/students/${groupId}`)
-  //     .then(({ data }) => setStudents(data.students))
-  //     .catch((err) => console.log(err));
-  // }, [groupId]);
-  
-  const findStudents = async (searchPhrase) => {
+    
+    const findStudents = async (searchPhrase) => {
     try {
       const { data } = await axios.post(`/students/search`, { searchPhrase } );
       return data;
@@ -44,10 +39,19 @@ export const useStudents = () => {
       console.log(err);
     }
   };
-
+  
   return {
     getGroups,
-    getStudents,
+    getStudentById,
+    getStudentsByGroup,
     findStudents,
   };
 };
+
+// useEffect(() => {
+//   if (!groupId) return;
+//   axios
+//     .get(`/students/${groupId}`)
+//     .then(({ data }) => setStudents(data.students))
+//     .catch((err) => console.log(err));
+// }, [groupId]);

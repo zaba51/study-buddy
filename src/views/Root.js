@@ -7,7 +7,6 @@ import { BrowserRouter as Router, Routes as Switch, Route, Navigate} from 'react
 import MainTemplate from 'components/templates/MainTemplate/MainTemplate';
 import AddUser from 'views/AddUser';
 import Dashboard from 'views/Dashboard';
-import Modal from 'components/organisms/Modal/Modal'
 
 const Root = () => {
   return (
@@ -15,7 +14,6 @@ const Root = () => {
       <ThemeProvider theme={theme}>
         <GlobalStyle />
         <MainTemplate>
-            <Modal />
             <Wrapper>
               <Switch>
                 <Route path="/add-user" element = {<AddUser />} />
