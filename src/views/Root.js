@@ -1,32 +1,70 @@
-import React from 'react';
-import { ThemeProvider } from 'styled-components';
-import { GlobalStyle } from 'assets/styles/GlobalStyle.js';
-import { theme } from 'assets/styles/theme'
+import React, { useContext } from 'react';
 import { Wrapper } from './Root.styles';
-import { BrowserRouter as Router, Routes as Switch, Route, Navigate} from 'react-router-dom'
+import {Routes as Switch, Route, Navigate} from 'react-router-dom'
 import MainTemplate from 'components/templates/MainTemplate/MainTemplate';
 import AddUser from 'views/AddUser';
 import Dashboard from 'views/Dashboard';
 
-const Root = () => {
+import FormField from 'components/molecules/FormField/FormField';
+import { Button } from 'components/atoms/Button/Button';
+import { useForm } from 'react-hook-form';
+import { useAuth } from 'hooks/useAuth';
+
+const AuthenticatedApp = () => {
   return (
-    <Router>
-      <ThemeProvider theme={theme}>
-        <GlobalStyle />
-        <MainTemplate>
-            <Wrapper>
-              <Switch>
-                <Route path="/add-user" element = {<AddUser />} />
-                <Route path="/group/" element={<Dashboard />}>
-                  <Route path=":id" element={<Dashboard />} />
-                </Route>
-                <Route path="/" element = {<Navigate replace to="/group" />} />
-              </Switch>
-            </Wrapper>
-        </MainTemplate>
-      </ThemeProvider>
-    </Router>
+    <MainTemplate>
+      <Wrapper>
+        <Switch>
+          <Route path="/add-user" element = {<AddUser />} />
+          <Route path="/group/" element={<Dashboard />}>
+            <Route path=":id" element={<Dashboard />} />
+          </Route>
+          <Route path="/" element = {<Navigate replace to="/group" />} />
+        </Switch>
+      </Wrapper>
+    </MainTemplate>
   );
+};
+
+const UnauthenticatedApp = () => {
+  const { signIn } = useAuth(); 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  return (
+    <form
+      onSubmit={handleSubmit(signIn)}
+      style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}
+    >
+      <FormField label="login" name="login" id="login" {...register('login', { required: true })} />
+      {errors.login && <span>Login is required</span>}
+      <FormField label="password" name="password" id="password" type="password" {...register('password', { required: true })} />
+      {errors.password && <span>Password is required</span>}
+      <Button type="submit">Sign in</Button>
+    </form>
+  );
+};
+
+
+const Root = () => {
+  const { user } = useAuth();
+
+  return (
+
+    <Switch>
+          <Route path="/login/*" element = {
+            user ? <AuthenticatedApp /> : <UnauthenticatedApp />
+          } />  
+          <Route path="/*" element = {
+            user ? <AuthenticatedApp /> : <Navigate replace to="/login" />
+          } />
+    </Switch>
+    
+    //user ? <AuthenticatedApp /> : <UnauthenticatedApp />
+  )
 };
 
 export default Root;

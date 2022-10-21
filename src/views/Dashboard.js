@@ -17,27 +17,27 @@ const Dashboard = () => {
 
   useEffect(() => {
     (async () => {
+      //await new Promise(r => setTimeout(r, 2000));
       const groups = await getGroups();
+      //const groups = groups0.map(el => el.id)
       setGroups(groups);
     })()
   }, [getGroups])
-
+  
   const handleOpenStudentDetails = async (id) => {
     const student = await getStudentById(id);
     setCurrentStudent(student);
     handleOpenModal();
   };
-
-  if (!id && groups.length > 0) return <Navigate replace to={`/group/${groups[0]}`} />;
-  
+  if (!id && groups.length > 0) return <Navigate replace to={`/group/${groups[0].id}`} />;
   return (
     <Wrapper>
       <TitleWrapper>
         <Title as="h2">Group {id}</Title>
         <nav>
-          {groups.map((group) => (
-            <Link key={group} to={`/group/${group}`}>
-              {group}{' '}
+          {groups.map(({id}) => (
+            <Link key={id} to={`/group/${id}`}>
+              {id}{' '}
             </Link>
           ))}
         </nav>

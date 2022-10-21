@@ -1,13 +1,15 @@
 import { Input } from 'components/atoms/Input/Input';
-import React, { useState, useEffect} from 'react';
+import React, { useState} from 'react';
 import { SearchBarWrapper, SearchResults, SearchWrapper,  SearchResultsItem, StatusInfo } from 'components/organisms/SearchBar/SearchBar.styles';
 import { useStudents } from 'hooks/useStudents';
 import debounce from 'lodash.debounce';
 import { useCombobox } from 'downshift';
+import {useAuth } from 'hooks/useAuth';
 
 const SearchBar = () => {
   const [matchingStudents, setMatchingStudents] = useState([]);
   const { findStudents } = useStudents();
+  const { user } = useAuth();
 
   const getMatchingStudents = debounce(async ({ inputValue }) => {
     const { students } = await findStudents(inputValue);
@@ -25,13 +27,13 @@ const SearchBar = () => {
   // }, [searchPhrase]); 
   // //}, [searchPhrase, getMatchingStudents]);
 
-
+  //console.log("SearchBar", user)
   return (
     <SearchBarWrapper>
       <StatusInfo>
         <p>Logged as:</p>
         <p>
-          <strong>Teacher</strong>
+          <strong>{ user.name }</strong>
         </p>
       </StatusInfo>
       <SearchWrapper {...getComboboxProps()}>

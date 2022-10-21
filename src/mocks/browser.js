@@ -15,11 +15,13 @@ const seed = () => {
     id: 'C',
   });
 
-    for (let i = 0; i < 15; i++) {
-      db.student.create();
-      db.event.create();
-    }
-  };
+db.teacher.create(); 
+
+for (let i = 0; i < 15; i++) {
+    db.student.create();
+    db.event.create();
+  }
+};
   
   seed();
   
