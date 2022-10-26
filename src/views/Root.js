@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Wrapper } from './Root.styles';
 import {Routes as Switch, Route, Navigate} from 'react-router-dom'
 import MainTemplate from 'components/templates/MainTemplate/MainTemplate';
@@ -9,6 +9,8 @@ import FormField from 'components/molecules/FormField/FormField';
 import { Button } from 'components/atoms/Button/Button';
 import { useForm } from 'react-hook-form';
 import { useAuth } from 'hooks/useAuth';
+import ErrorMessage from 'components/molecules/ErrorMessage/ErrorMessage';
+import { useError } from 'hooks/useError';
 
 const AuthenticatedApp = () => {
   return (
@@ -51,18 +53,22 @@ const UnauthenticatedApp = () => {
 
 const Root = () => {
   const { user } = useAuth();
+  const { error } = useError();
+
+  console.log("Root render");
 
   return (
-
-    <Switch>
-          <Route path="/login/*" element = {
-            user ? <AuthenticatedApp /> : <UnauthenticatedApp />
-          } />  
-          <Route path="/*" element = {
-            user ? <AuthenticatedApp /> : <Navigate replace to="/login" />
-          } />
-    </Switch>
-    
+    <>
+      {error ? <ErrorMessage message={error}/> : null}
+      <Switch>
+            <Route path="/login/*" element = {
+              user ? <AuthenticatedApp /> : <UnauthenticatedApp />
+            } />  
+            <Route path="/*" element = {
+              user ? <AuthenticatedApp /> : <Navigate replace to="/login" />
+            } />
+      </Switch>
+    </>  
     //user ? <AuthenticatedApp /> : <UnauthenticatedApp />
   )
 };
