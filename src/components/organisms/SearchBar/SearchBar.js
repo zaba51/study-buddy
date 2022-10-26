@@ -12,6 +12,7 @@ const SearchBar = () => {
   const { user } = useAuth();
 
   const getMatchingStudents = debounce(async ({ inputValue }) => {
+    if (!inputValue) return;
     const { students } = await findStudents(inputValue);
     setMatchingStudents(students);
   }, 400);
@@ -27,13 +28,13 @@ const SearchBar = () => {
   // }, [searchPhrase]); 
   // //}, [searchPhrase, getMatchingStudents]);
 
-  //console.log("SearchBar", user)
+  console.log("SearchBar", user)
   return (
     <SearchBarWrapper>
       <StatusInfo>
         <p>Logged as:</p>
         <p>
-          <strong>{ user.name }</strong>
+          <strong>{ user?.name }</strong>
         </p>
       </StatusInfo>
       <SearchWrapper {...getComboboxProps()}>
